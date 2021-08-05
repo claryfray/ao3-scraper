@@ -63,13 +63,15 @@ with open("results.csv", "w") as f:
             fandoms_list = []
             for f in fandoms:
                 fandoms_list.append(f.text.strip())
-            row.append(fandoms_list)
+            fandoms_str = "$".join(fandoms_list) # $ is unlikely to show up in an ao3 tag so using it as separator
+            row.append(fandoms_str)
             
             reqd_tags = work.select(".required-tags span span")
             reqd_tags_list = []
             for r in reqd_tags:
                 reqd_tags_list.append(r.text.strip())
-            row.append(reqd_tags_list)
+            reqd_tags_str = "$".join(reqd_tags_list)
+            row.append(reqd_tags_str)
             # 0 - content rating, 1 - relationship type, 2 - content warnings, 3 - work status (1 and 2 can have multiple - comma separated)
             
             date_updated = work.select_one(".datetime").text.strip()
@@ -79,19 +81,22 @@ with open("results.csv", "w") as f:
             rel_list = []
             for rel in relationships:
                 rel_list.append(rel.text.strip())
-            row.append(rel_list)
+            rel_str = "$".join(rel_list)
+            row.append(rel_str)
             
             characters = work.select(".characters")
             char_list = []
             for char in characters:
                 char_list.append(char.text.strip())
-            row.append(char_list)
+            char_str = "$".join(char_list)
+            row.append(char_str)
 
             freeforms = work.select(".freeforms")
             free_list = []
             for free in freeforms:
                 free_list.append(free.text.strip())
-            row.append(free_list)
+            free_str = "$".join(free_list)
+            row.append(free_str)
 
             summary = work.select_one(".userstuff.summary")
             if summary is None:
