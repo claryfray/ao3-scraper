@@ -23,12 +23,18 @@ The results will automatically be saved to `results.csv`
 
 For example, run `python3 get-fics.py 3 Glee kudos_count` to get the first 3 pages of fics in the Glee fandom, sorted by kudos.
 
-Run `python3 analyse-fics.py`
+Run `python3 analyse-fics.py [graph type]` to get a graph of the most popular fandoms/relationships/characters/freeform tags that occur in the primary tag.
+
+(For graph type please use
+- fandom
+- relationship
+- character
+- freeform)
 
 This will generate a graph based on the data saved in `results.csv` which can be accessed at `fig.png` or loaded with `index.html`
 
 ## To-do
-Allow more options in graph generation - right now I hard-code that it generates the top 10 fandoms in the primary tag.
+Allow more options in graph generation.
 
 Create an interface so that fan statisticians can easily use this to generate what graphs they'd like instead of relying on hardcoding.
 
@@ -36,9 +42,10 @@ Create an interface so that fan statisticians can easily use this to generate wh
 
 Run `python3 get-fics.py 5 "Alternate Universe - College" kudos_count`
 
-Run `python3 analyse-fics.py`
+Run `python3 analyse-fics.py fandom`
 
 This produces the frequency of the top 10 fandoms in "Alternate Universe - College", from the top 100 fics sorted by kudos. 
+
 ![Example graph](examples/example.png)
 
 ## Note
