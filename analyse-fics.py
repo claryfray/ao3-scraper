@@ -11,11 +11,11 @@ graph_type = args.graph_type
 if graph_type == "fandom":
     FANDOM_COL = 2
 elif graph_type == "relationship":
-    FANDOM_COL = 5
+    FANDOM_COL = 8
 elif graph_type == "character":
-    FANDOM_COL = 6
+    FANDOM_COL = 9
 elif graph_type == "freeform":
-    FANDOM_COL = 7
+    FANDOM_COL = 10
 else:
     print("Please input a valid graph type")
     exit(1)
@@ -25,15 +25,19 @@ with open("results.csv", "r") as f:
     
     # Get most popular of whatever type user wants
     fandoms = {}
+    header = True
     for row in plots: 
-        fandom_list = row[FANDOM_COL].split("$")
-        for fandom in fandom_list:
-            if fandom == "": # Not sure why this is happening but eh
-                continue
-            if fandom not in fandoms:
-                fandoms[fandom] = 1
-            else:
-                fandoms[fandom] += 1
+        if not header:
+            fandom_list = row[FANDOM_COL].split("$")
+            for fandom in fandom_list:
+                if fandom == "": # Not sure why this is happening but eh
+                    continue
+                if fandom not in fandoms:
+                    fandoms[fandom] = 1
+                else:
+                    fandoms[fandom] += 1
+        else:
+            header = False
 
     fandoms = dict(sorted(fandoms.items(), key=lambda item: item[1], reverse=True))
     

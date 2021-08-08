@@ -15,11 +15,15 @@ Run `python3 get-fics.py [number of pages] [fandom/primary tag] [sorting method]
 - comments_count
 - bookmarks_count)
 
+Number of pages and sorting method is optional - will default to all search results, and sort by date last updated if not specified.
+
 For fandom/primary tag please use a valid AO3 tag for best results.
 
 Note that there's a 5 second delay for each page that you access to comply with AO3 guidelines.
 
 The results will automatically be saved to `results.csv`
+
+The title, author, fandoms, content rating, relationship type, content warnings, work status, date updated, relationship tags, character tags, freeform tags, summary, language, word count, chapters, comments, kudos, bookmarks and hits will be saved.
 
 For example, run `python3 get-fics.py 3 Glee kudos_count` to get the first 3 pages of fics in the Glee fandom, sorted by kudos.
 
@@ -36,7 +40,7 @@ This will generate a graph based on the data saved in `results.csv` which can be
 ## To-do
 Allow more options in graph generation.
 
-Create an interface so that fan statisticians can easily use this to generate what graphs they'd like instead of relying on hardcoding.
+Create an interface so that fan statisticians can easily use this to generate what graphs they'd like.
 
 ## Example usage
 
@@ -47,7 +51,3 @@ Run `python3 analyse-fics.py fandom`
 This produces the frequency of the top 10 fandoms in "Alternate Universe - College", from the top 100 fics sorted by kudos. 
 
 ![Example graph](examples/example.png)
-
-## Note
-
-If you know how many pages of results there are you can put that in in order to scrape all possible search results of your query (or put in an impossibly high number - the script will detect if no fics are left), which will produce more accurate results. Note that this will take a while to scrape though due to the delay per page.

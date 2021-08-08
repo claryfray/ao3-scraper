@@ -6,30 +6,44 @@ import csv
 
 # Let user input parameters of search
 parser = argparse.ArgumentParser(description="List the filters of your AO3 search")
-parser.add_argument("num_pages", type=int, help="The number of pages")
+parser.add_argument("--num_pages", default="-1", type=int, help="The number of pages") # defaults to all search results
 parser.add_argument("fandom", type=str, help="The fandom (please use a valid AO3 fandom tag)")
-parser.add_argument("sort", type=str, help="How do you wish to sort your results?")
-# authors_to_sort_on
-# title_to_sort_on
-# created_at
-# revised_at
-# word_count
-# hits
-# kudos_count
-# comments_count
-# bookmarks_count
+parser.add_argument("--sort", default="revised_at", type=str, help="How do you wish to sort your results?") # defaults to date updated
+
+valid_sort = ["authors_to_sort_on", "title_to_sort_on", "created_at", "revised_at", "word_count", "hits", 
+    "kudos_count", "comments_count", "bookmarks_count"]
+
 args = parser.parse_args()
 
 num_pages = args.num_pages
 fandom = args.fandom
 sort = args.sort
 
-with open("results.csv", "w") as f:
+if sort not in valid_sort:
+    print("Please enter a valid sorting method.")
+    exit(1)
+if num_pages < 0 and num_pages != -1:
+    print("Please enter a valid number of pages of works to scrape.")
+    exit(1)
+
+with open("results.csv", "w", encoding="utf-8") as f:
 
     writer = csv.writer(f)
 
+    header = ["Title", "Author", "Fandoms", "Content Rating", "Relationship Type", "Content Warning", "Work Status",
+        "Date Updated", "Relationship Tags", "Character Tags", "Freeform Tags", "Summary", "Language", "Word Count",
+        "Chapters", "Comments", "Kudos", "Bookmarks", "Hits"]
+    writer.writerow(header)
+
     # For the number of pages we want to look at
-    for page in range(1, num_pages + 1):
+    pages_so_far = 0
+    while True:
+        if num_pages != -1 and pages_so_far == num_pages:
+            print(num_pages)
+            print(pages_so_far)
+            break
+
+        page = pages_so_far + 1
 
         # this ugly ass url lets me make more specific searches
         url = ("https://archiveofourown.org/tags/"+ fandom + "/works?commit=Sort+and+Filter&page="
@@ -70,9 +84,18 @@ with open("results.csv", "w") as f:
             reqd_tags_list = []
             for r in reqd_tags:
                 reqd_tags_list.append(r.text.strip())
-            reqd_tags_str = "$".join(reqd_tags_list)
-            row.append(reqd_tags_str)
-            # 0 - content rating, 1 - relationship type, 2 - content warnings, 3 - work status (1 and 2 can have multiple - comma separated)
+
+            row.append(reqd_tags_list[0]) # content rating
+
+            rel_type = reqd_tags_list[1].split(", ") # relationship type
+            rel_type_str = "$".join(rel_type)
+            row.append(rel_type_str)
+
+            cw = reqd_tags_list[2].split(", ") # content warnings
+            cw_str = "$".join(cw)
+            row.append(cw_str)
+
+            row.append(reqd_tags_list[3]) # work status
             
             date_updated = work.select_one(".datetime").text.strip()
             row.append(date_updated)
@@ -150,3 +173,5 @@ with open("results.csv", "w") as f:
             writer.writerow(row)
 
         sleep(5) # to fit with ao3 guidelines
+
+        pages_so_far += 1
